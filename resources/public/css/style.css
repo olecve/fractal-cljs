@@ -1,0 +1,15 @@
+html {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+body {
+    background: dimgray;
+}
+
+#canvas {
+    border: 1px solid #000000;
+}
