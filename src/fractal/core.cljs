@@ -4,7 +4,7 @@
 
 (def ctx (canvas/get-ctx-by-id "canvas"))
 
-(defn calculate [p q K]
+(defn calculate-iteration-nr [p q K]
   (loop [x p
          y q
          k 0]
@@ -18,7 +18,7 @@
         scale-y (/ canvas-heidth (- window-end-y window-start-y))]
     (doseq [x (range window-start-x window-end-x step)
             y (range window-start-y window-end-y step)]
-      (let [k (calculate x y K)
+      (let [k (calculate-iteration-nr x y K)
             x-translated (- x window-start-x)
             y-translated (- y window-start-y)
             x-result (* x-translated scale-x)
