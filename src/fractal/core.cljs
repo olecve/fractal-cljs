@@ -21,13 +21,10 @@
     (doseq [x (range window-start-x window-end-x step-x)
             y (range window-start-y window-end-y step-y)]
       (let [k (calculate-iteration-nr x y K)
+            color (canvas/rgb (* k (/ 250 K)) 0 0)
             x-canvas (* (- x window-start-x) scale-x)
             y-canvas (* (- y window-start-y) scale-y)]
-        (canvas/draw-point
-          ctx
-          (canvas/rgb (* k (/ 250 K)) 0 0)
-          x-canvas
-          y-canvas)))))
+        (canvas/draw-point ctx color x-canvas y-canvas)))))
 
 (draw-fractal {:window-start-x -2.5
                :window-start-y -1.5
