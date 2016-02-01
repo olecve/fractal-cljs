@@ -13,23 +13,23 @@
       k
       (recur (+ p (- (* x x) (* y y))) (+ q (* 2 x y)) (inc k)))))
 
-(defn draw-fractal [{:keys [window-start-x window-start-y window-end-x window-end-y canvas-width canvas-heidth K step]}]
-  (let [scale-x (/ canvas-width (- window-end-x window-start-x))
-        scale-y (/ canvas-heidth (- window-end-y window-start-y))]
-    (doseq [x (range window-start-x window-end-x step)
-            y (range window-start-y window-end-y step)]
+(defn draw-fractal [{:keys [window-start-x window-start-y window-end-x window-end-y canvas-width canvas-heidth K]}]
+  (let [step-x (/ (- window-end-x window-start-x) canvas-width)
+        scale-x (/ 1 step-x)
+        step-y (/ (- window-end-y window-start-y) canvas-heidth)
+        scale-y (/ 1 step-y)]
+    (doseq [x (range window-start-x window-end-x step-x)
+            y (range window-start-y window-end-y step-y)]
       (let [k (calculate-iteration-nr x y K)
-            x-translated (- x window-start-x)
-            y-translated (- y window-start-y)
-            x-result (* x-translated scale-x)
-            y-result (* y-translated scale-y)]
+            x-canvas (* (- x window-start-x) scale-x)
+            y-canvas (* (- y window-start-y) scale-y)]
         (canvas/fill-rect
           ctx
           (canvas/rgb (* k (/ 250 K)) 0 0)
-          x-result
-          y-result
-          (* step scale-x)
-          (* step scale-y))))))
+          x-canvas
+          y-canvas
+          1
+          1)))))
 
 (draw-fractal {:window-start-x -2.5
                :window-start-y -1.5
@@ -37,5 +37,4 @@
                :window-end-y   1.5
                :canvas-width   300
                :canvas-heidth  300
-               :K              25
-               :step           0.01})
+               :K              25})
