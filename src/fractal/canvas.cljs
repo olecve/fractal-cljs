@@ -21,3 +21,7 @@
 (defn fill-rect [ctx color x0 y0 x1 y1]
   (set! (. ctx -fillStyle) color)
   (.fillRect ctx x0 y0 x1 y1))
+
+(defn draw-point [ctx color x y]
+  (set! (. ctx -fillStyle) color)
+  (.fillRect ctx x y 1 1))

@@ -23,13 +23,11 @@
       (let [k (calculate-iteration-nr x y K)
             x-canvas (* (- x window-start-x) scale-x)
             y-canvas (* (- y window-start-y) scale-y)]
-        (canvas/fill-rect
+        (canvas/draw-point
           ctx
           (canvas/rgb (* k (/ 250 K)) 0 0)
           x-canvas
-          y-canvas
-          1
-          1)))))
+          y-canvas)))))
 
 (draw-fractal {:window-start-x -2.5
                :window-start-y -1.5
