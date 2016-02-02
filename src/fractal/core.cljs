@@ -45,10 +45,10 @@
 (defn calc-interval [begin end length]
   (/ (- end begin) length))
 
-(defn draw-fractal [{:keys [window-start-x window-start-y window-end-x window-end-y canvas-width canvas-heidth K]}]
+(defn draw-fractal [{:keys [window-start-x window-start-y window-end-x window-end-y canvas-width canvas-height K]}]
   (let [step-x (calc-interval window-start-x window-end-x canvas-width)
         scale-x (/ 1 step-x)
-        step-y (calc-interval window-start-y window-end-y canvas-heidth)
+        step-y (calc-interval window-start-y window-end-y canvas-height)
         scale-y (/ 1 step-y)]
     (doseq [x (range window-start-x window-end-x step-x)
             y (range window-start-y window-end-y step-y)]
@@ -79,7 +79,7 @@
                                                    :window-end-x   window-end-x
                                                    :window-end-y   window-end-y
                                                    :canvas-width   canvas-width
-                                                   :canvas-heidth  canvas-height
+                                                   :canvas-height  canvas-height
                                                    :K              25}))
            (if (true? dragging?)
              (let [value (<! mouse-drag)]
