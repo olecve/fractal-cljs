@@ -25,3 +25,9 @@
 (defn draw-point [ctx color x y]
   (set! (. ctx -fillStyle) color)
   (.fillRect ctx x y 1 1))
+
+(defn get-image-data [ctx x y width height]
+  (.getImageData ctx x y width height))
+
+(defn put-image-data [ctx image-data x y]
+  (.putImageData ctx image-data x y))
