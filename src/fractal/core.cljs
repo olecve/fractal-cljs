@@ -8,31 +8,6 @@
 
 (def ctx (canvas/get-ctx-by-id "canvas"))
 
-(defn events->chan
-  ([el type] (events->chan el type (chan)))
-  ([el type chan] (events/listen el type #(put! chan %))
-   chan))
-
-(defn mouse-drag-chan [el]
-  (let [out (chan 1 (map (fn [event] {:x    (.-clientX event)
-                                      :y    (.-clientY event)
-                                      :type (.-type event)})))
-        mouse-down (events->chan el EventType.MOUSEDOWN)
-        mouse-move (events->chan js/window EventType.MOUSEMOVE)
-        mouse-up (events->chan js/window EventType.MOUSEUP)]
-    (go-loop [dragging? false]
-             (let [[val channel] (alts! [mouse-down mouse-move mouse-up])]
-               (condp = channel
-                 mouse-down (do (>! out val)
-                                (recur true))
-                 mouse-move (if dragging?
-                              (do (>! out val)
-                                  (recur true))
-                              (recur false))
-                 mouse-up (do (>! out val)
-                              (recur false)))))
-    out))
-
 (defn calculate-iteration-nr [p q K]
   (loop [x p
          y q
@@ -57,6 +32,31 @@
             x-canvas (* (- x window-start-x) scale-x)
             y-canvas (* (- y window-start-y) scale-y)]
         (canvas/draw-point ctx color x-canvas y-canvas)))))
+
+(defn events->chan
+  ([el type] (events->chan el type (chan)))
+  ([el type chan] (events/listen el type #(put! chan %))
+   chan))
+
+(defn mouse-drag-chan [el]
+  (let [out (chan 1 (map (fn [event] {:x    (.-clientX event)
+                                      :y    (.-clientY event)
+                                      :type (.-type event)})))
+        mouse-down (events->chan el EventType.MOUSEDOWN)
+        mouse-move (events->chan js/window EventType.MOUSEMOVE)
+        mouse-up (events->chan js/window EventType.MOUSEUP)]
+    (go-loop [dragging? false]
+             (let [[val channel] (alts! [mouse-down mouse-move mouse-up])]
+               (condp = channel
+                 mouse-down (do (>! out val)
+                                (recur true))
+                 mouse-move (if dragging?
+                              (do (>! out val)
+                                  (recur true))
+                              (recur false))
+                 mouse-up (do (>! out val)
+                              (recur false)))))
+    out))
 
 (let [canvas (.getElementById js/document "canvas")
       canvas-width 300
