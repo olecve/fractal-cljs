@@ -20,17 +20,17 @@
 (defn calc-interval [begin end length]
   (/ (- end begin) length))
 
-(defn draw-fractal [{:keys [window-start-x window-start-y window-end-x window-end-y canvas-width canvas-height K]}]
-  (let [step-x (calc-interval window-start-x window-end-x canvas-width)
+(defn draw-fractal [{:keys [window-begin-x window-begin-y window-end-x window-end-y canvas-width canvas-height K]}]
+  (let [step-x (calc-interval window-begin-x window-end-x canvas-width)
         scale-x (/ 1 step-x)
-        step-y (calc-interval window-start-y window-end-y canvas-height)
+        step-y (calc-interval window-begin-y window-end-y canvas-height)
         scale-y (/ 1 step-y)]
-    (doseq [x (range window-start-x window-end-x step-x)
-            y (range window-start-y window-end-y step-y)]
+    (doseq [x (range window-begin-x window-end-x step-x)
+            y (range window-begin-y window-end-y step-y)]
       (let [k (calculate-iteration-nr x y K)
             color (canvas/rgb (* k (/ 250 K)) 0 0)
-            x-canvas (* (- x window-start-x) scale-x)
-            y-canvas (* (- y window-start-y) scale-y)]
+            x-canvas (* (- x window-begin-x) scale-x)
+            y-canvas (* (- y window-begin-y) scale-y)]
         (canvas/draw-point ctx color x-canvas y-canvas)))))
 
 (defn events->chan
@@ -66,16 +66,16 @@
       top (.-top rect)
       zoom (events->chan canvas EventType.DBLCLICK)
       mouse-drag (mouse-drag-chan canvas)]
-  (go-loop [window-start-x -2.5
-            window-start-y -1.5
+  (go-loop [window-begin-x -2.5
+            window-begin-y -1.5
             window-end-x 0.5
             window-end-y 1.5
             dragging? false
             image-data nil
             start-dragging-x 0
             start-dragging-y 0]
-           (when (false? dragging?) (draw-fractal {:window-start-x window-start-x
-                                                   :window-start-y window-start-y
+           (when (false? dragging?) (draw-fractal {:window-begin-x window-begin-x
+                                                   :window-begin-y window-begin-y
                                                    :window-end-x   window-end-x
                                                    :window-end-y   window-end-y
                                                    :canvas-width   canvas-width
@@ -85,19 +85,19 @@
              (let [value (<! mouse-drag)]
                (canvas/put-image-data ctx image-data (- (:x value) start-dragging-x) (- (:y value) start-dragging-y))
                (condp = (:type value)
-                 EventType.MOUSEMOVE (recur window-start-x window-start-y window-end-x window-end-y true image-data start-dragging-x start-dragging-y)
-                 EventType.MOUSEUP (recur (- window-start-x (* (- (:x value) start-dragging-x) (calc-interval window-start-x window-end-x canvas-width)))
-                                          (- window-start-y (* (- (:y value) start-dragging-y) (calc-interval window-start-y window-end-y canvas-height)))
-                                          (- window-end-x (* (- (:x value) start-dragging-x) (calc-interval window-start-x window-end-x canvas-width)))
-                                          (- window-end-y (* (- (:y value) start-dragging-y) (calc-interval window-start-y window-end-y canvas-height)))
+                 EventType.MOUSEMOVE (recur window-begin-x window-begin-y window-end-x window-end-y true image-data start-dragging-x start-dragging-y)
+                 EventType.MOUSEUP (recur (- window-begin-x (* (- (:x value) start-dragging-x) (calc-interval window-begin-x window-end-x canvas-width)))
+                                          (- window-begin-y (* (- (:y value) start-dragging-y) (calc-interval window-begin-y window-end-y canvas-height)))
+                                          (- window-end-x (* (- (:x value) start-dragging-x) (calc-interval window-begin-x window-end-x canvas-width)))
+                                          (- window-end-y (* (- (:y value) start-dragging-y) (calc-interval window-begin-y window-end-y canvas-height)))
                                           false
                                           image-data
                                           start-dragging-x
                                           start-dragging-y)))
              (let [[value chanel] (alts! [mouse-drag zoom])]
                (condp = chanel
-                 mouse-drag (recur window-start-x
-                                   window-start-y
+                 mouse-drag (recur window-begin-x
+                                   window-begin-y
                                    window-end-x
                                    window-end-y
                                    true
@@ -106,9 +106,9 @@
                                    (:y value))
                  zoom (let [x-mouse-click (- (.-clientX value) left)
                             y-mouse-click (- (.-clientY value) top)
-                            x-complex (+ window-start-x (* x-mouse-click (calc-interval window-start-x window-end-x canvas-width)))
-                            y-complex (+ window-start-y (* y-mouse-click (calc-interval window-start-y window-end-y canvas-height)))
-                            delta (/ (- window-end-x window-start-x) 4)]
+                            x-complex (+ window-begin-x (* x-mouse-click (calc-interval window-begin-x window-end-x canvas-width)))
+                            y-complex (+ window-begin-y (* y-mouse-click (calc-interval window-begin-y window-end-y canvas-height)))
+                            delta (/ (- window-end-x window-begin-x) 4)]
                         (recur
                           (- x-complex delta)
                           (- y-complex delta)
