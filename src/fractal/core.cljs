@@ -58,7 +58,7 @@
                               (recur false)))))
     out))
 
-(let [canvas (.getElementById js/document "canvas")
+(let [canvas (canvas/get-canvas-by-id "canvas")
       canvas-width 300
       canvas-height 300
       rect (.getBoundingClientRect canvas)
