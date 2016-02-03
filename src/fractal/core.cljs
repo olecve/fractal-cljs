@@ -74,14 +74,14 @@
             image-data nil
             start-dragging-x 0
             start-dragging-y 0]
-           (when (false? dragging?) (draw-fractal {:window-begin-x window-begin-x
-                                                   :window-begin-y window-begin-y
-                                                   :window-end-x   window-end-x
-                                                   :window-end-y   window-end-y
-                                                   :canvas-width   canvas-width
-                                                   :canvas-height  canvas-height
-                                                   :K              25}))
-           (if (true? dragging?)
+           (when-not dragging? (draw-fractal {:window-begin-x window-begin-x
+                                              :window-begin-y window-begin-y
+                                              :window-end-x   window-end-x
+                                              :window-end-y   window-end-y
+                                              :canvas-width   canvas-width
+                                              :canvas-height  canvas-height
+                                              :K              25}))
+           (if dragging?
              (let [value (<! mouse-drag)]
                (canvas/put-image-data ctx image-data (- (:x value) start-dragging-x) (- (:y value) start-dragging-y))
                (condp = (:type value)
