@@ -59,8 +59,8 @@
     out))
 
 (let [canvas (canvas/get-canvas-by-id "canvas")
-      canvas-width 300
-      canvas-height 300
+      canvas-width 500
+      canvas-height 500
       rect (.getBoundingClientRect canvas)
       left (.-left rect)
       top (.-top rect)
