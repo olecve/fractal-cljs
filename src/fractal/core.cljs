@@ -8,7 +8,7 @@
 
 (def ctx (canvas/get-ctx-by-id "canvas"))
 
-(defn calculate-iteration-nr [p q K]
+(defn calc-iteration-nr [p q K]
   (loop [x p
          y q
          k 0]
@@ -27,7 +27,7 @@
         scale-y (/ 1 step-y)]
     (doseq [x (range window-begin-x window-end-x step-x)
             y (range window-begin-y window-end-y step-y)]
-      (let [k (calculate-iteration-nr x y K)
+      (let [k (calc-iteration-nr x y K)
             color (canvas/rgb (* k (/ 250 K)) 0 0)
             x-canvas (* (- x window-begin-x) scale-x)
             y-canvas (* (- y window-begin-y) scale-y)]
